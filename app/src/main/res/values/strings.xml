@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ProjetAndroid</string>
+    <string name="menu_title">Menu Principal</string>
+    <string name="btn_play">Jouer</string>
+    <string name="btn_highscores">Meilleurs Scores</string>
+    <string name="label_score">Score :</string>
+    <string name="label_lives">Vies :</string>
+    <string name="hint_answer">Votre réponse</string>
+    <string name="btn_submit">Valider</string>
+    <string name="default_question">\? + \?</string>
+    <string name="btn_back_menu">Retour au Menu</string>
+    <string name="fact_loading">Recherche d\'une anecdote...</string>
+    <string name="fact_error">Impossible de récupérer l\'anecdote.</string>
+    <string name="fact_title">Anecdote culturelle pour apprendre :</string>
 </resources>

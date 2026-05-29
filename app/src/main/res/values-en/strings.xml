@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProjetAndroid</string>
+    <string name="menu_title">Main Menu</string>
+    <string name="btn_play">Play</string>
+    <string name="btn_highscores">Highscores</string>
+
+    <string name="label_score">Score:</string>
+    <string name="label_lives">Lives:</string>
+    <string name="hint_answer">Your answer</string>
+    <string name="btn_submit">Submit</string>
+    <string name="default_question">\? + \?</string>
+
+    <string name="btn_back_menu">Back to Menu</string>
+    <string name="fact_loading">Looking for a fact...</string>
+    <string name="fact_error">Could not fetch fact.</string>
+    <string name="fact_title">Cultural fact to learn:</string>
+</resources>
