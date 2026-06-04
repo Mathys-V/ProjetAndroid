@@ -15,4 +15,14 @@
     <string name="fact_loading">Looking for a fact...</string>
     <string name="fact_error">Could not fetch fact.</string>
     <string name="fact_title">Cultural fact to learn:</string>
+    <string name="btn_features">Our Features</string>
+    <string name="title_features">Bonus Features</string>
+    <string name="features_list">- League System (Bronze to Legend)\n- 10-second timer per question\n- HTTPS Network Call (Facts API)\n- Local SQLite Database</string>
+
+    <string name="timer_text">Time: </string>
+    <string name="btn_quit">Quit</string>
+    <string name="dialog_quit_title">Quit game?</string>
+    <string name="dialog_quit_msg">Your current score will not be saved.</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_no">No</string>
 </resources>

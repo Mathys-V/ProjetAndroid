@@ -27,5 +27,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, HighscoreActivity.class);
             startActivity(intent);
         });
+
+        Button btnFeatures = findViewById(R.id.btnFeatures);
+        btnFeatures.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FeaturesActivity.class);
+            startActivity(intent);
+        });
     }
 }

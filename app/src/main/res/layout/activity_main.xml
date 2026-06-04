@@ -47,4 +47,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnPlay" />
 
+    <Button
+        android:id="@+id/btnFeatures"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="@string/btn_features"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnHighscores"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

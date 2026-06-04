@@ -2,30 +2,32 @@ package com.example.projetandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
-    private TextView tvLives, tvScore, tvQuestion;
+    private TextView tvLives, tvScore, tvQuestion, tvTimer;
     private EditText etAnswer;
-    private Button btnSubmit;
+    private Button btnSubmit, btnQuit;
 
     private int score = 0;
     private int lives = 3;
     private int expectedAnswer;
 
-    // Nouvelles variables pour le système de Streak (Combo)
     private int currentStreak = 0;
     private int multiplier = 1;
+
+    // Variables pour le Timer
+    private CountDownTimer timer;
+    private long timeLeftInMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,69 @@ public class GameActivity extends AppCompatActivity {
         tvLives = findViewById(R.id.tvLives);
         tvScore = findViewById(R.id.tvScore);
         tvQuestion = findViewById(R.id.tvQuestion);
+        tvTimer = findViewById(R.id.tvTimer);
         etAnswer = findViewById(R.id.etAnswer);
         btnSubmit = findViewById(R.id.btnSubmit);
+        btnQuit = findViewById(R.id.btnQuitGame);
 
         updateScoreAndLives();
         generateNewQuestion();
 
         btnSubmit.setOnClickListener(v -> checkAnswer());
+
+        btnQuit.setOnClickListener(v -> showQuitDialog());
+    }
+
+    /**
+     * Lance ou relance le timer de 10 secondes
+     */
+    private void startTimer(long durationInMillis) {
+        if (timer != null) {
+            timer.cancel(); // Stoppe l'ancien timer s'il existe
+        }
+
+        timer = new CountDownTimer(durationInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                tvTimer.setText(getString(R.string.timer_text) + (millisUntilFinished / 1000) + "s");
+            }
+
+            @Override
+            public void onFinish() {
+                // Temps écoulé ! On perd une vie.
+                lives--;
+                currentStreak = 0;
+                multiplier = 1;
+                Toast.makeText(GameActivity.this, "Temps écoulé ! La réponse était " + expectedAnswer, Toast.LENGTH_SHORT).show();
+
+                updateScoreAndLives();
+
+                if (lives <= 0) {
+                    showGameOverDialog();
+                } else {
+                    generateNewQuestion(); // Lance la question suivante (qui relancera le timer)
+                }
+            }
+        }.start();
+    }
+
+    private void showQuitDialog() {
+        // On met le timer en pause
+        if (timer != null) timer.cancel();
+
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_quit_title))
+                .setMessage(getString(R.string.dialog_quit_msg))
+                .setPositiveButton(getString(R.string.btn_yes), (dialog, which) -> {
+                    finish(); // Ferme l'activité et retourne à l'accueil
+                })
+                .setNegativeButton(getString(R.string.btn_no), (dialog, which) -> {
+                    // Reprend le timer là où il s'était arrêté
+                    startTimer(timeLeftInMillis);
+                })
+                .setCancelable(false)
+                .show();
     }
 
     private void generateNewQuestion() {
@@ -76,6 +134,9 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         etAnswer.setText("");
+
+        // On lance le timer de 10 secondes (10000 millisecondes) pour la nouvelle question
+        startTimer(10000);
     }
 
     private void checkAnswer() {
@@ -86,15 +147,16 @@ public class GameActivity extends AppCompatActivity {
             return;
         }
 
+        // On arrête le timer pendant la vérification
+        if (timer != null) timer.cancel();
+
         int userAnswer = Integer.parseInt(answerStr);
 
         if (userAnswer == expectedAnswer) {
-            // GESTION DU STREAK : On augmente le combo
             currentStreak++;
             if (currentStreak >= 5) {
-                multiplier = 2; // Au bout de 5 bonnes réponses, les points comptent double
+                multiplier = 2;
             }
-
             score += multiplier;
 
             String msg = "Bonne réponse !";
@@ -102,7 +164,6 @@ public class GameActivity extends AppCompatActivity {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
         } else {
-            // GESTION DU STREAK : On perd le combo si erreur
             lives--;
             currentStreak = 0;
             multiplier = 1;
@@ -120,8 +181,6 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateScoreAndLives() {
         tvLives.setText(getString(R.string.label_lives) + " " + lives);
-
-        // Affichage dynamique du score avec le multiplicateur s'il est actif
         String scoreText = getString(R.string.label_score) + " " + score;
         if (multiplier > 1) {
             scoreText += " (x" + multiplier + ")";
@@ -129,9 +188,6 @@ public class GameActivity extends AppCompatActivity {
         tvScore.setText(scoreText);
     }
 
-    /**
-     * Détermine la ligue en fonction du score final
-     */
     private String getLeague(int finalScore) {
         if (finalScore >= 80) return "Ligue Légende";
         if (finalScore >= 50) return "Ligue Titan";
@@ -190,6 +246,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showGameOverDialog() {
+        if (timer != null) timer.cancel(); // Stoppe le timer définitivement à la fin du jeu
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Partie Terminée !");
 
@@ -200,15 +258,12 @@ public class GameActivity extends AppCompatActivity {
         layout.setOrientation(android.widget.LinearLayout.VERTICAL);
         layout.setPadding(50, 20, 50, 20);
 
-        // --- NOUVEAU : Le titre de l'anecdote ---
         TextView tvFactTitle = new TextView(this);
         tvFactTitle.setText(getString(R.string.fact_title));
         tvFactTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         tvFactTitle.setPadding(0, 0, 0, 10);
         layout.addView(tvFactTitle);
-        // ----------------------------------------
 
-        // La zone de texte pour l'anecdote elle-même
         TextView tvFact = new TextView(this);
         tvFact.setText(getString(R.string.fact_loading));
         tvFact.setTypeface(null, android.graphics.Typeface.ITALIC);
@@ -242,5 +297,12 @@ public class GameActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         builder.show();
+    }
+
+    // Nettoyage de la mémoire si on quitte l'application brusquement
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer != null) timer.cancel();
     }
 }

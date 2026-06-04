@@ -12,4 +12,14 @@
     <string name="fact_loading">Recherche d\'une anecdote...</string>
     <string name="fact_error">Impossible de récupérer l\'anecdote.</string>
     <string name="fact_title">Anecdote culturelle pour apprendre :</string>
+    <string name="btn_features">Nos Ajouts</string>
+    <string name="title_features">Fonctionnalités Bonus</string>
+    <string name="features_list">- Système de Ligues (Bronze à Légende)\n- Timer de 10 secondes par calcul\n- Appel réseau HTTPS (API Anecdotes)\n- Base de données SQLite locale</string>
+
+    <string name="timer_text">Temps : </string>
+    <string name="btn_quit">Quitter</string>
+    <string name="dialog_quit_title">Quitter la partie ?</string>
+    <string name="dialog_quit_msg">Ton score actuel ne sera pas sauvegardé.</string>
+    <string name="btn_yes">Oui</string>
+    <string name="btn_no">Non</string>
 </resources>
